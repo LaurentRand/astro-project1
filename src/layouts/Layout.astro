@@ -1,0 +1,27 @@
+---
+import "../styles/global.css";
+import bgPokemon from "../assets/bg-pokemon.jpg";
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="/logo-pokemon.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <!-- Header -->
+    <section>
+      <img src={bgPokemon.src} alt="background" class="w-full h-svh object-cover" />
+      <h1 class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 font-extrabold text-5xl text-amber-600">Hello, Pokéfan</h1>
+    </section>
+
+    <!-- Content -->
+    <main></main>
+    <slot />
+  </body>
+</html>

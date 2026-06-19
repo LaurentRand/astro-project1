@@ -1,0 +1,17 @@
+---
+const { pokemon } = Astro.props;
+---
+
+<div class="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 p-5">
+  <img src={pokemon.image} alt={pokemon.name} class="w-32 h-32 mx-auto" />
+
+  <div class="text-center mt-4">
+    <h3 class="text-xl font-bold text-gray-800">
+      {pokemon.name}
+    </h3>
+
+    <span class="inline-block mt-2 px-3 py-1 bg-yellow-400 text-sm rounded-full">
+      {pokemon.type}
+    </span>
+  </div>
+</div>
