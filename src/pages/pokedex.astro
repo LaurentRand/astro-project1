@@ -1,9 +1,13 @@
 ---
 import Pokedexlayout from "../layouts/Pokedexlayout.astro";
-import Navbar from "../components/Navbar.astro";
+import Navbar from "../components/navbar.astro";
+import PokemonDex from "../components/pokemonDex.astro";
+import Footer from "../components/footer.astro";
 const title = "Pokédex";
 ---
 
 <Pokedexlayout title={title}>
   <Navbar />
+  <PokemonDex />
+  <Footer />
 </Pokedexlayout>
