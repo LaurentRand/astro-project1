@@ -11,6 +11,9 @@
   --color-pokemon-primer: #fdc700;
   --color-pokemon-sekunder: #fa442a;
   --color-pokemon-dblue: #00364f;
+  --color-pokemon-red: #ef233c;
+  --color-pokemon-lblue: #ebf2fa;
+  --color-pokemon-hover: #fc7b28;
 }
 
 html {

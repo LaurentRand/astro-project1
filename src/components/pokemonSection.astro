@@ -3,12 +3,12 @@ import PokemonCard from "./pokemonCard.astro";
 import { pokemons } from "../data/pokemon";
 ---
 
-<section class="py-20 bg-slate-100">
+<section class="py-20 bg-pokemon-lblue">
   <div class="container mx-auto px-4">
     <div class="text-center mb-10">
-      <h2 class="text-4xl font-bold">Pokemon Collection</h2>
+      <h2 class="text-4xl font-heading">Pokemon Collection</h2>
 
-      <p class="text-gray-500 mt-3">Search your favorite Pokemon</p>
+      <p class="text-gray-500 mt-3 font-body">Search your favorite Pokemon</p>
     </div>
 
     <!-- <div class="max-w-md mx-auto mb-10">
@@ -26,7 +26,7 @@ import { pokemons } from "../data/pokemon";
     </div>
     <!-- Button View More -->
     <div class="flex justify-center mt-10">
-      <a href="/pokedex" class="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-lg transition duration-300"> View More </a>
+      <a href="/pokedex" class="px-6 py-3 bg-pokemon-primer hover:bg-pokemon-hover text-pokemon-dblue font-semibold rounded-lg transition duration-300"> View More </a>
     </div>
   </div>
 </section>
