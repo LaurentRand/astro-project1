@@ -1,13 +1,98 @@
 ---
-
+// Navbar.astro - Responsive Pokemon Navbar
+// Mobile: hamburger + drawer | Desktop: horizontal nav
 ---
 
 <header class="fixed top-0 left-0 w-full z-30 bg-white/20 backdrop-blur-md">
-  <nav class="flex items-center w-full px-15 py-3 font-medium">
-    <a href="#" class="text-pokemon-red text-2xl font-brand">Pokemon<span class="text-pokemon-primer font-brand">GO</span></a>
-    <ul class="absolute left-1/2 -translate-x-1/2 flex items-center gap-6 font-heading">
-      <li class="text-pokemon-dblue hover:text-gray-400"><a href="/">Home</a></li>
-      <li class="text-pokemon-dblue hover:text-gray-400"><a href="/pokedex">Pokédex</a></li>
+  <nav class="flex items-center justify-between w-full px-6 md:px-15 py-3 font-medium">
+    <!-- Logo -->
+    <a href="#" class="text-pokemon-red text-2xl font-brand z-50 relative">
+      Pokemon<span class="text-pokemon-primer font-brand">GO</span>
+    </a>
+
+    <!-- Desktop Menu -->
+    <ul class="hidden md:flex items-center gap-6 font-heading absolute left-1/2 -translate-x-1/2">
+      <li class="text-pokemon-dblue hover:text-gray-400 transition-colors">
+        <a href="/">Home</a>
+      </li>
+      <li class="text-pokemon-dblue hover:text-gray-400 transition-colors">
+        <a href="/pokedex">Pokédex</a>
+      </li>
     </ul>
+
+    <!-- Hamburger Button (Mobile only) -->
+    <button id="hamburger-btn" class="md:hidden z-50 relative flex flex-col justify-center items-center w-8 h-8 gap-1.5 cursor-pointer" aria-label="Toggle menu" aria-expanded="false">
+      <span class="hamburger-line block w-6 h-0.5 bg-pokemon-dblue rounded transition-all duration-300 ease-in-out"></span>
+      <span class="hamburger-line block w-6 h-0.5 bg-pokemon-dblue rounded transition-all duration-300 ease-in-out"></span>
+      <span class="hamburger-line block w-6 h-0.5 bg-pokemon-dblue rounded transition-all duration-300 ease-in-out"></span>
+    </button>
   </nav>
+
+  <!-- Mobile Drawer Menu -->
+  <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300 ease-in-out bg-pokemon-dblue/20 backdrop-blur-md">
+    <ul class="flex flex-col font-heading px-6 pb-5 pt-2 gap-4 text-center">
+      <li>
+        <a href="/" class="block text-pokemon-dblue hover:text-gray-100 transition-colors text-lg mt-2 py-1"> Home </a>
+      </li>
+      <li class="w-full h-px bg-white/25" aria-hidden="true"></li>
+      <li>
+        <a href="/pokedex" class="block text-pokemon-dblue hover:text-gray-100 transition-colors text-lg py-1"> Pokédex </a>
+      </li>
+    </ul>
+  </div>
 </header>
+
+<script>
+  const btn = document.getElementById("hamburger-btn") as HTMLButtonElement;
+  const menu = document.getElementById("mobile-menu") as HTMLDivElement;
+  const lines = btn.querySelectorAll<HTMLSpanElement>(".hamburger-line");
+
+  let isOpen = false;
+
+  btn.addEventListener("click", () => {
+    isOpen = !isOpen;
+    btn.setAttribute("aria-expanded", String(isOpen));
+
+    if (isOpen) {
+      // Buka menu: set max-height ke scrollHeight agar animasi smooth
+      menu.style.maxHeight = menu.scrollHeight + "px";
+
+      // Animasi hamburger → X
+      lines[0].style.transform = "translateY(8px) rotate(45deg)";
+      lines[1].style.opacity = "0";
+      lines[2].style.transform = "translateY(-8px) rotate(-45deg)";
+    } else {
+      // Tutup menu
+      menu.style.maxHeight = "0";
+
+      // Kembalikan ke hamburger
+      lines[0].style.transform = "";
+      lines[1].style.opacity = "";
+      lines[2].style.transform = "";
+    }
+  });
+
+  // Tutup menu saat link diklik (navigasi mobile)
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      isOpen = false;
+      menu.style.maxHeight = "0";
+      btn.setAttribute("aria-expanded", "false");
+      lines[0].style.transform = "";
+      lines[1].style.opacity = "";
+      lines[2].style.transform = "";
+    });
+  });
+
+  // Tutup menu saat resize ke desktop
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 768 && isOpen) {
+      isOpen = false;
+      menu.style.maxHeight = "0";
+      btn.setAttribute("aria-expanded", "false");
+      lines[0].style.transform = "";
+      lines[1].style.opacity = "";
+      lines[2].style.transform = "";
+    }
+  });
+</script>
