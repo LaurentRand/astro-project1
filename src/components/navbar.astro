@@ -49,50 +49,53 @@
 
   let isOpen = false;
 
+  // Fungsi utilitas untuk menutup menu (agar kode tidak berulang)
+  function closeMenu() {
+    isOpen = false;
+    menu.style.maxHeight = "0";
+    btn.setAttribute("aria-expanded", "false");
+    lines[0].style.transform = "";
+    lines[1].style.opacity = "";
+    lines[2].style.transform = "";
+    lines.forEach((line) => line.classList.replace("bg-white", "bg-pokemon-dblue"));
+  }
+
   btn.addEventListener("click", () => {
     isOpen = !isOpen;
     btn.setAttribute("aria-expanded", String(isOpen));
 
     if (isOpen) {
-      // Buka menu: set max-height ke scrollHeight agar animasi smooth
       menu.style.maxHeight = menu.scrollHeight + "px";
-
-      // Animasi hamburger → X
       lines[0].style.transform = "translateY(8px) rotate(45deg)";
       lines[1].style.opacity = "0";
       lines[2].style.transform = "translateY(-8px) rotate(-45deg)";
+      lines.forEach((line) => line.classList.replace("bg-pokemon-dblue", "bg-white"));
     } else {
-      // Tutup menu
-      menu.style.maxHeight = "0";
-
-      // Kembalikan ke hamburger
-      lines[0].style.transform = "";
-      lines[1].style.opacity = "";
-      lines[2].style.transform = "";
+      closeMenu();
     }
   });
 
   // Tutup menu saat link diklik (navigasi mobile)
   menu.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
-      isOpen = false;
-      menu.style.maxHeight = "0";
-      btn.setAttribute("aria-expanded", "false");
-      lines[0].style.transform = "";
-      lines[1].style.opacity = "";
-      lines[2].style.transform = "";
+      closeMenu();
     });
+  });
+
+  // PERUBAHAN UTAMA: Deteksi klik di luar area menu & tombol hamburger untuk menutup drawer
+  document.addEventListener("click", (event) => {
+    const target = event.target as Node;
+
+    // Jika menu sedang terbuka, dan area yang diklik BUKAN bagian dari menu serta BUKAN dari tombol hamburger
+    if (isOpen && !menu.contains(target) && !btn.contains(target)) {
+      closeMenu();
+    }
   });
 
   // Tutup menu saat resize ke desktop
   window.addEventListener("resize", () => {
     if (window.innerWidth >= 768 && isOpen) {
-      isOpen = false;
-      menu.style.maxHeight = "0";
-      btn.setAttribute("aria-expanded", "false");
-      lines[0].style.transform = "";
-      lines[1].style.opacity = "";
-      lines[2].style.transform = "";
+      closeMenu();
     }
   });
 </script>
