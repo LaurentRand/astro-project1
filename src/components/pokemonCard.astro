@@ -1,17 +1,155 @@
 ---
 const { pokemon } = Astro.props;
+
+// Warna badge per type pokemon
+const typeColors: Record<string, string> = {
+  fire: "bg-orange-400 text-white",
+  water: "bg-blue-400 text-white",
+  grass: "bg-green-500 text-white",
+  electric: "bg-yellow-400 text-gray-800",
+  psychic: "bg-pink-400 text-white",
+  ice: "bg-cyan-300 text-gray-800",
+  dragon: "bg-indigo-600 text-white",
+  dark: "bg-gray-800 text-white",
+  fairy: "bg-pink-300 text-gray-800",
+  fighting: "bg-red-600 text-white",
+  poison: "bg-purple-500 text-white",
+  ground: "bg-yellow-600 text-white",
+  rock: "bg-yellow-800 text-white",
+  bug: "bg-lime-500 text-white",
+  ghost: "bg-purple-700 text-white",
+  steel: "bg-slate-400 text-white",
+  normal: "bg-gray-300 text-gray-800",
+  flying: "bg-sky-300 text-gray-800",
+};
+
+const badgeColor = typeColors[pokemon.type?.toLowerCase()] ?? "bg-yellow-400 text-gray-800";
+
+// Fallback stats jika data tidak ada di data source
+const hp = pokemon.hp ?? 45;
+const attack = pokemon.attack ?? 49;
+const defense = pokemon.defense ?? 49;
+
+// Warna progress bar berdasarkan nilai stat
+function statBarColor(value: number): string {
+  if (value >= 80) return "bg-green-500";
+  if (value >= 50) return "bg-yellow-400";
+  return "bg-red-400";
+}
 ---
 
-<div class="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 p-5">
-  <img src={pokemon.image} alt={pokemon.name} class="w-32 h-32 mx-auto" />
+<!-- CARD WRAPPER: perspective agar efek 3D terlihat -->
+<div class="card-wrapper group" tabindex="0" role="button" aria-label={`Lihat stats ${pokemon.name}`}>
+  <div class="card-inner">
+    <!-- ===== SISI DEPAN ===== -->
+    <div class="card-front bg-white rounded-xl shadow-md p-5 flex flex-col items-center justify-center">
+      <img src={pokemon.image} alt={pokemon.name} class="w-32 h-32 object-contain drop-shadow-md" />
+      <div class="text-center mt-4">
+        <h3 class="text-xl font-bold text-gray-800 capitalize">
+          {pokemon.name}
+        </h3>
+        <span class={`inline-block mt-2 px-3 py-1 text-sm font-semibold rounded-full capitalize ${badgeColor}`}>
+          {pokemon.type}
+        </span>
+      </div>
+      <p class="mt-4 text-xs text-gray-400 italic">Hover untuk stats ↩</p>
+    </div>
 
-  <div class="text-center mt-4">
-    <h3 class="text-xl font-bold text-gray-800">
-      {pokemon.name}
-    </h3>
+    <!-- ===== SISI BELAKANG ===== -->
+    <div class="card-back bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-xl p-5 flex flex-col justify-center gap-4">
+      <!-- Header belakang -->
+      <div class="text-center">
+        <h3 class="text-white font-bold text-lg capitalize mt-1">{pokemon.name}</h3>
+        <span class={`inline-block px-3 py-1 text-xs font-bold rounded-full capitalize ${badgeColor}`}>
+          {pokemon.type}
+        </span>
+      </div>
 
-    <span class="inline-block mt-2 px-3 py-1 bg-yellow-400 text-sm rounded-full">
-      {pokemon.type}
-    </span>
+      <!-- Stats -->
+      <div class="space-y-3">
+        <!-- HP -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-xs font-semibold text-red-400 uppercase tracking-wider">❤️ HP</span>
+            <span class="text-xs font-bold text-white">{hp}</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div class={`h-2 rounded-full ${statBarColor(hp)}`} style={`width: ${Math.min(hp, 100)}%`}></div>
+          </div>
+        </div>
+
+        <!-- Attack -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-xs font-semibold text-orange-400 uppercase tracking-wider">⚔️ Attack</span>
+            <span class="text-xs font-bold text-white">{attack}</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div class={`h-2 rounded-full ${statBarColor(attack)}`} style={`width: ${Math.min(attack, 100)}%`}></div>
+          </div>
+        </div>
+
+        <!-- Defense -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider">🛡️ Defense</span>
+            <span class="text-xs font-bold text-white">{defense}</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div class={`h-2 rounded-full ${statBarColor(defense)}`} style={`width: ${Math.min(defense, 100)}%`}></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Watermark image pojok kanan bawah -->
+      <img src={pokemon.image} alt="" aria-hidden="true" class="w-14 h-14 object-contain opacity-10 absolute bottom-3 right-3 pointer-events-none" />
+    </div>
   </div>
 </div>
+
+<style>
+  /* ── Perspective wrapper ── */
+  .card-wrapper {
+    perspective: 1000px;
+    height: 280px;
+    cursor: default;
+    outline: none;
+  }
+
+  /* ── Inner rotatable ── */
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  /* Flip on hover atau focus (aksesibilitas keyboard) */
+  .card-wrapper:hover .card-inner,
+  .card-wrapper:focus-within .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  /* ── Kedua sisi ── */
+  .card-front,
+  .card-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+  }
+
+  /* Sisi belakang diputar 180deg dari awal */
+  .card-back {
+    transform: rotateY(180deg);
+  }
+
+  /* Aksesibilitas: hentikan animasi jika user prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .card-inner {
+      transition: none;
+    }
+  }
+</style>
